@@ -1,0 +1,5 @@
+[build]
+  base = "client"
+  command = "npm ci && npm run build"
+
+# Next.js runtime bunu kullanıyor, publish'i elleme
