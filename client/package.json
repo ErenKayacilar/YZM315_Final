@@ -1,0 +1,77 @@
+{
+  "name": "lms-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "LMS Platform Desktop Application",
+  "author": "LMS Team",
+  "main": "electron/dist/main.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "electron:build": "tsc -p electron/tsconfig.json",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && npm run electron:build && electron .\"",
+    "electron:start": "npm run electron:build && electron .",
+    "dist": "npm run build && npm run electron:build && electron-builder",
+    "dist:win": "npm run build && npm run electron:build && electron-builder --win",
+    "dist:mac": "npm run build && npm run electron:build && electron-builder --mac",
+    "dist:linux": "npm run build && npm run electron:build && electron-builder --linux"
+  },
+  "build": {
+    "appId": "com.lms.desktop",
+    "productName": "LMS Platform",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "electron/dist/**/*",
+      "out/**/*",
+      "public/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "public/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "public/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico"
+    }
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "electron-dl": "^4.0.0",
+    "electron-is-dev": "^3.0.1",
+    "i18next": "^25.7.3",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "next": "16.1.1",
+    "next-themes": "^0.4.6",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-i18next": "^16.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^9.2.1",
+    "electron": "^39.2.7",
+    "electron-builder": "^26.0.12",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "wait-on": "^9.0.3"
+  }
+}

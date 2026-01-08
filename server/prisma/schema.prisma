@@ -1,0 +1,172 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  INSTRUCTOR
+  ASSISTANT
+  STUDENT
+  GUEST
+}
+
+enum ContentType {
+  VIDEO
+  PDF
+  LIVE_LINK
+  TEXT
+}
+
+model CourseNote {
+  id        Int      @id @default(autoincrement())
+  content   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  phoneNumber String?
+  profileImage String?
+  role      Role     @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isApproved Boolean @default(false)
+
+  courses       Course[]       @relation("InstructorCourses")
+  enrollments   Enrollment[]
+  examResults   ExamResult[]
+  notes         CourseNote[]
+  progress      UserProgress[]
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  hasLab      Boolean  @default(false)
+  instructorId Int
+  instructor   User    @relation("InstructorCourses", fields: [instructorId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules     Module[]
+  enrollments Enrollment[]
+
+  exams       Exam[]
+  questions   Question[]
+  notes       CourseNote[]
+}
+
+model Module {
+  id        Int      @id @default(autoincrement())
+  title     String
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  lessons   Lesson[]
+}
+
+model Lesson {
+  id        Int         @id @default(autoincrement())
+  title     String
+  type      ContentType @default(VIDEO)
+  url       String
+  moduleId  Int
+  module    Module      @relation(fields: [moduleId], references: [id])
+  progress  UserProgress[]
+}
+
+model UserProgress {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  lessonId    Int
+  lesson      Lesson    @relation(fields: [lessonId], references: [id])
+  isCompleted Boolean   @default(false)
+  completedAt DateTime?
+
+  @@unique([userId, lessonId])
+}
+
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+  enrolledAt DateTime @default(now())
+  status    EnrollmentStatus @default(PENDING)
+  theoryScore Float?
+  labScore    Float?
+
+  @@unique([userId, courseId])
+}
+
+enum EnrollmentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Exam {
+  id          Int       @id @default(autoincrement())
+  title       String
+  courseId    Int
+  course      Course    @relation(fields: [courseId], references: [id])
+  questions   Question[]
+  results     ExamResult[]
+  requiresSeb Boolean   @default(false)
+  duration    Int?
+  deadline    DateTime?
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  MULTIPLE_SELECT
+  TRUE_FALSE
+  SHORT_ANSWER
+  LONG_ANSWER
+  ORDERING
+  MATCHING
+  FILL_IN_BLANKS
+  NUMERIC
+  CODE_SNIPPET
+}
+
+model Question {
+  id          Int          @id @default(autoincrement())
+  text        String
+  type        QuestionType @default(MULTIPLE_CHOICE)
+  structure   Json
+  answerKey   Json
+  examId      Int?
+  exam        Exam?        @relation(fields: [examId], references: [id])
+  courseId    Int?
+  course      Course?      @relation(fields: [courseId], references: [id])
+}
+
+model ExamResult {
+  id        Int      @id @default(autoincrement())
+  score     Int
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  examId    Int
+  exam      Exam     @relation(fields: [examId], references: [id])
+  completedAt DateTime @default(now())
+}
+
