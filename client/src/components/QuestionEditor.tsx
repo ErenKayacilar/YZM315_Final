@@ -198,7 +198,7 @@ export default function QuestionEditor({ initialData, onSave, onCancel }: Questi
                     <button onClick={() => {
                         const newItems = structure.items.filter((_: any, i: number) => i !== idx);
                         setStructure({ ...structure, items: newItems });
-                        setAnswerKey(newItems.map(i => i.text));
+                        setAnswerKey(newItems.map((i: any) => i.text));
                     }} className="text-red-500">×</button>
                 </div>
             ))}

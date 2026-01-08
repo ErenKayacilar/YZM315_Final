@@ -29,6 +29,7 @@ interface Exam {
     id: number;
     title: string;
     courseTitle: string;
+    courseId: number;
     questionsCount: number;
     duration?: number;
     requiresSeb: boolean;
@@ -63,6 +64,7 @@ export default function InstructorExamsScreen() {
                             id: exam.id,
                             title: exam.title,
                             courseTitle: course.title,
+                            courseId: course.id,
                             questionsCount: exam.questions?.length || 0,
                             duration: exam.duration,
                             requiresSeb: exam.requiresSeb,
@@ -210,7 +212,11 @@ export default function InstructorExamsScreen() {
                                             style={[styles.scanButton, { backgroundColor: '#8b5cf620' }]}
                                             onPress={() => router.push({
                                                 pathname: '/optical-scan',
-                                                params: { examId: exam.id.toString(), examTitle: exam.title }
+                                                params: {
+                                                    examId: exam.id.toString(),
+                                                    examTitle: exam.title,
+                                                    courseId: exam.courseId.toString()
+                                                }
                                             } as any)}
                                         >
                                             <Ionicons name="scan-outline" size={18} color="#8b5cf6" />

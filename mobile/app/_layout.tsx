@@ -24,6 +24,9 @@ function AuthNavigatorWithTheme() {
     const inStudentGroup = segments[0] === '(student)';
     const inAdminGroup = segments[0] === '(admin)';
 
+    // Allow root-level modal screens (optical-scan, optical-result, edit-profile, modal)
+    const isRootModalScreen = ['optical-scan', 'optical-result', 'edit-profile', 'modal'].includes(segments[0] as string);
+
     if (!user) {
       if (!inAuthGroup) {
         router.replace('/(auth)/login');
@@ -31,6 +34,11 @@ function AuthNavigatorWithTheme() {
     } else {
       const isInstructor = user.role === Role.INSTRUCTOR;
       const isAdmin = user.role === Role.ADMIN;
+
+      // Don't redirect if user is on a root modal screen
+      if (isRootModalScreen) {
+        return;
+      }
 
       if (inAuthGroup) {
         if (isAdmin) {
@@ -44,7 +52,7 @@ function AuthNavigatorWithTheme() {
         router.replace('/(admin)' as any);
       } else if (isInstructor && inInstructorGroup) {
         // Already correct
-      } else if (isInstructor && !inInstructorGroup && !inAdminGroup) { // Prevent instructor -> admin or student
+      } else if (isInstructor && !inInstructorGroup && !inAdminGroup) {
         router.replace('/(instructor)' as any);
       } else if (!isInstructor && !isAdmin && inInstructorGroup) {
         router.replace('/(student)' as any);

@@ -28,6 +28,7 @@ import adminRoutes from './routes/adminRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import userRoutes from './routes/userRoutes';
 import opticalReaderRoutes from './routes/opticalReaderRoutes';
+import omrRoutes from './routes/omrRoutes';
 
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
@@ -39,6 +40,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/optical-reader', opticalReaderRoutes);
+app.use('/api/omr', omrRoutes);
 
 
 app.listen(port, () => {

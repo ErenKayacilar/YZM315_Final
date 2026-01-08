@@ -248,6 +248,99 @@ export const getExamResults = async (req: Request, res: Response): Promise<void>
     }
 };
 
+// Submit Optical Exam Result (OMR Scanner)
+// This endpoint is for instructors to submit exam results on behalf of students
+export const submitOpticalExam = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { examId, studentId, score, answers } = req.body;
+        const instructorId = (req as any).user?.id;
+
+        console.log('[OMR Backend] Received submission:', { examId, studentId, score, answers });
+
+        // Validate required fields
+        if (!examId || !studentId || score === undefined) {
+            res.status(400).json({ error: 'examId, studentId ve score alanları gereklidir.' });
+            return;
+        }
+
+        // Verify the exam exists
+        const exam = await prisma.exam.findUnique({
+            where: { id: Number(examId) },
+            include: { course: true }
+        });
+
+        if (!exam) {
+            res.status(404).json({ error: 'Sınav bulunamadı.' });
+            return;
+        }
+
+        // Verify the instructor owns this course
+        if (exam.course.instructorId !== instructorId) {
+            res.status(403).json({ error: 'Bu sınavı yönetme yetkiniz yok.' });
+            return;
+        }
+
+        // Verify the student is enrolled in this course
+        const enrollment = await prisma.enrollment.findUnique({
+            where: {
+                userId_courseId: {
+                    userId: Number(studentId),
+                    courseId: exam.courseId
+                }
+            }
+        });
+
+        if (!enrollment || enrollment.status !== 'APPROVED') {
+            res.status(400).json({ error: 'Öğrenci bu derse kayıtlı değil veya onaylı değil.' });
+            return;
+        }
+
+        // Check if student already has a result for this exam
+        const existingResult = await prisma.examResult.findFirst({
+            where: {
+                examId: Number(examId),
+                userId: Number(studentId)
+            }
+        });
+
+        let result;
+
+        if (existingResult) {
+            // Update existing result
+            result = await prisma.examResult.update({
+                where: { id: existingResult.id },
+                data: {
+                    score: Number(score),
+                    completedAt: new Date()
+                },
+                include: { user: { select: { id: true, name: true, email: true } } }
+            });
+            console.log('[OMR Backend] Updated existing result:', result.id);
+        } else {
+            // Create new result
+            result = await prisma.examResult.create({
+                data: {
+                    examId: Number(examId),
+                    userId: Number(studentId),
+                    score: Number(score)
+                },
+                include: { user: { select: { id: true, name: true, email: true } } }
+            });
+            console.log('[OMR Backend] Created new result:', result.id);
+        }
+
+        res.status(201).json({
+            success: true,
+            message: 'Optik form sonucu kaydedildi.',
+            result
+        });
+
+    } catch (error) {
+        console.error('[OMR Backend] Error:', error);
+        res.status(500).json({ error: 'Optik form sonucu kaydedilemedi.', details: (error as Error).message });
+    }
+};
+
 // Add questions from bank to exam (Duplicate logic)
 export const addQuestionsToExam = async (req: Request, res: Response): Promise<void> => {
     try {
