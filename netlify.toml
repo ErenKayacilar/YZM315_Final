@@ -1,5 +1,7 @@
 [build]
   base = "client"
   command = "npm ci && npm run build"
+  publish = ".next"
 
-# Next.js runtime bunu kullanıyor, publish'i elleme
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
