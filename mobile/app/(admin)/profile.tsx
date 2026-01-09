@@ -38,9 +38,20 @@ export default function AdminProfileScreen() {
     };
 
     const toggleLanguage = async () => {
-        const newLang = i18n.language === 'tr' ? 'en' : 'tr';
+        const languages = ['tr', 'en', 'de'];
+        const currentIndex = languages.indexOf(i18n.language);
+        const nextIndex = (currentIndex + 1) % languages.length;
+        const newLang = languages[nextIndex];
         await AsyncStorage.setItem('user-language', newLang);
         i18n.changeLanguage(newLang);
+    };
+
+    const getLanguageLabel = () => {
+        switch (i18n.language) {
+            case 'en': return 'English';
+            case 'de': return 'Deutsch';
+            default: return 'Türkçe';
+        }
     };
 
     const handleThemeChange = () => {
@@ -137,7 +148,7 @@ export default function AdminProfileScreen() {
 
                 {renderMenuItem(
                     'language',
-                    `${t('common.filter')}: ${i18n.language === 'tr' ? 'Türkçe' : 'English'}`,
+                    `${t('common.filter')}: ${getLanguageLabel()}`,
                     toggleLanguage
                 )}
             </View>

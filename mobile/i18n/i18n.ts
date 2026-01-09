@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import tr from './locales/tr.json';
 import en from './locales/en.json';
+import de from './locales/de.json';
 
 // Language detector for React Native
 const languageDetectorPlugin = {
@@ -38,6 +39,7 @@ i18n
         resources: {
             tr: { translation: tr },
             en: { translation: en },
+            de: { translation: de },
         },
         fallbackLng: 'tr',
         interpolation: {
