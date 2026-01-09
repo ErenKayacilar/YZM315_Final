@@ -2,9 +2,7 @@ import { Request, Response } from 'express';
 import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 // Basic OMR (Optical Mark Recognition) processing
 export const processOpticalForm = async (req: Request, res: Response) => {

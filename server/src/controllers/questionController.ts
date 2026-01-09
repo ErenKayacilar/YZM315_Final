@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import * as XLSX from 'xlsx';
-
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 // Valid question types from Prisma schema
 const VALID_QUESTION_TYPES = [

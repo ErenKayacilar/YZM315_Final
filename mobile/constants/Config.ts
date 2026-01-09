@@ -4,8 +4,8 @@
 // DO NOT use 'localhost' - it won't work on physical devices
 
 export const Config = {
-    // Example: 'http://192.168.1.100:3001/api'
-    API_URL: 'http://10.116.53.176:3001/api',
+    // Production backend (Render)
+    API_URL: 'https://yzm315-final.onrender.com/api',
 
     // Token storage keys
     TOKEN_KEY: 'auth_token',

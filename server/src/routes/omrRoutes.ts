@@ -4,10 +4,9 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { authenticateToken, authorizeRole } from '../middleware/authMiddleware';
-import { PrismaClient } from '@prisma/client';
+import prisma from '../lib/prisma';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 // Configure multer for file uploads
 const uploadDir = path.join(__dirname, '..', '..', 'uploads');

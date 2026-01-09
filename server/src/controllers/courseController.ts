@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { PrismaClient, EnrollmentStatus } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { EnrollmentStatus } from '@prisma/client';
+import prisma from '../lib/prisma';
 
 // Ders oluşturma (Sadece Instructor/Admin)
 export const createCourse = async (req: Request, res: Response) => {
