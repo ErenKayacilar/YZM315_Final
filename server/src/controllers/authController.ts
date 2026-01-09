@@ -79,7 +79,11 @@ export const login = async (req: Request, res: Response) => {
                 profileImage: user.profileImage
             }
         });
-    } catch (error) {
-        res.status(500).json({ message: 'Sunucu hatasi.', error });
+    } catch (error: any) {
+        console.error('[AUTH] Login error:', error?.message || error);
+        res.status(500).json({
+            message: 'Sunucu hatasi.',
+            error: error?.message || 'Bilinmeyen hata'
+        });
     }
 };
