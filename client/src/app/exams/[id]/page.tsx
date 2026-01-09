@@ -114,7 +114,7 @@ export default function ExamPage({ params }: { params: Promise<{ id: string }> }
     const handleDownloadSebConfig = async () => {
         try {
             const token = localStorage.getItem('token');
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://yzm315-final.onrender.com/api';
             const response = await fetch(`${baseUrl}/exams/${id}/seb-config`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
