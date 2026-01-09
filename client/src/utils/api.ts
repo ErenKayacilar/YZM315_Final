@@ -1,7 +1,8 @@
 import axios from 'axios';
 
+// Production backend URL - hardcoded for reliability
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://yzm315-final.onrender.com/api',
+    baseURL: 'https://yzm315-final.onrender.com/api',
 });
 
 api.interceptors.request.use((config) => {

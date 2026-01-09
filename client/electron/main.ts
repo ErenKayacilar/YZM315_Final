@@ -29,10 +29,11 @@ function createWindow(): void {
         show: false,
     });
 
-    // Load the app
-    const startUrl = isDev
-        ? 'http://localhost:3000'
-        : `file://${path.join(__dirname, '../out/index.html')}`;
+    // Load the app - always use production URL for reliability
+    // const startUrl = isDev
+    //     ? 'http://localhost:3000'
+    //     : `file://${path.join(__dirname, '../out/index.html')}`;
+    const startUrl = 'https://lmse.netlify.app';
 
     mainWindow.loadURL(startUrl);
 
