@@ -130,8 +130,10 @@ export default function OpticalScanScreen() {
                         console.log('[OMR] Total MULTIPLE_CHOICE questions:', multipleChoiceCount);
                         console.log('[OMR] Answer key built:', fetchedAnswerKey);
                     }
-                } catch (examError) {
-                    console.error('[OMR] Failed to fetch exam:', examError);
+                } catch (examError: any) {
+                    // Use console.warn instead of console.error to avoid React Native error modal
+                    // 403 errors are expected if user doesn't have permission - we handle gracefully
+                    console.warn('[OMR] Failed to fetch exam (expected if no permission):', examError?.message || examError);
                 }
             }
 
