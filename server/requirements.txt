@@ -1,0 +1,3 @@
+# Python dependencies for OMR (Optical Mark Recognition) script
+opencv-python-headless==4.8.1.78
+numpy==1.26.2
